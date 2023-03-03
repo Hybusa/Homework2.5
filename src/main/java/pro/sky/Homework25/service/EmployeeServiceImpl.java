@@ -24,7 +24,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmployeeAlreadyAddedException("Employee is already in the Book.");
         }
 
-        Employee tmpEmployee = new Employee(firstName, lastName);
+        final Employee tmpEmployee = new Employee(firstName, lastName);
         employeeList.add(tmpEmployee);
         System.out.println("Employee added\n");
         return tmpEmployee;
@@ -35,7 +35,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employeeList.size() < 1)
             throw new EmployeeNotFoundException("The book is empty");
 
-        Employee tmpEmployee = checkParametersAndFindEmployee(firstName, lastName);
+        final Employee tmpEmployee = checkParametersAndFindEmployee(firstName, lastName);
 
         if (tmpEmployee != null)
             employeeList.remove(tmpEmployee);
@@ -48,7 +48,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee findEmployee(String firstName, String lastName) {
 
-        Employee tmpEmployee = checkParametersAndFindEmployee(firstName, lastName);
+        final Employee tmpEmployee = checkParametersAndFindEmployee(firstName, lastName);
         if (tmpEmployee != null) {
             System.out.println("employee found");
             return tmpEmployee;
