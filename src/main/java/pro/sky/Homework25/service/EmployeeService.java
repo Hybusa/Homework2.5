@@ -1,7 +1,7 @@
 package pro.sky.Homework25.service;
 
 
-import pro.sky.Homework25.emplyee.Employee;
+import pro.sky.Homework25.model.Employee;
 
 interface EmployeeService {
 

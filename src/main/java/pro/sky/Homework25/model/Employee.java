@@ -1,4 +1,4 @@
-package pro.sky.Homework25.emplyee;
+package pro.sky.Homework25.model;
 
 import java.util.Objects;
 
@@ -33,5 +33,12 @@ public class Employee {
         return Objects.hash(firstName, lastName);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+       if(this.getClass() != obj.getClass())
+           throw new RuntimeException("Wrong types");
 
+       return this.firstName.equals(((Employee) obj).firstName) &&
+               this.lastName.equals(((Employee) obj).lastName);
+    }
 }
