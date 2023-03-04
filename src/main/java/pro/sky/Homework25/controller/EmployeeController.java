@@ -1,6 +1,5 @@
 package pro.sky.Homework25.controller;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +8,8 @@ import pro.sky.Homework25.exception.EmployeeNotFoundException;
 import pro.sky.Homework25.exception.EmployeeStorageIsFullException;
 import pro.sky.Homework25.model.Employee;
 import pro.sky.Homework25.service.EmployeeServiceImpl;
+
+import java.util.Set;
 
 
 @RestController
@@ -21,7 +22,7 @@ public class EmployeeController {
     }
 
     @GetMapping(path = "add")
-    @ResponseStatus(code = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
     public Employee addEmployee(@RequestParam("firstName") String firstName,
                                 @RequestParam("lastName") String lastName
     ) {
@@ -29,52 +30,48 @@ public class EmployeeController {
     }
 
     @GetMapping(path = "remove")
-    @ResponseStatus(code = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
     public Employee removeEmployee(@RequestParam("firstName") String firstName,
                                    @RequestParam("lastName") String lastName
     ) {
         return employeeService.removeEmployee(firstName, lastName);
     }
 
-
     @GetMapping(path = "find")
-    @ResponseStatus(code = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)
     public Employee findEmployee(@RequestParam("firstName") String firstName,
                                  @RequestParam("lastName") String lastName
     ) {
         return employeeService.findEmployee(firstName, lastName);
     }
 
-
-
-    @ExceptionHandler(EmployeeAlreadyAddedException.class)
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public ResponseEntity<String> handleNoSuchElementFoundException(
-            EmployeeAlreadyAddedException e
-    ) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_ACCEPTABLE)
-                .body(e.getMessage());
+    @GetMapping(path = "getAll")
+    @ResponseStatus(HttpStatus.OK)
+    public Set<Employee> getAllEmployees(){
+       return employeeService.getAllEmployees();
     }
 
-    @ExceptionHandler(EmployeeNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleNoSuchElementFoundException(
-            EmployeeNotFoundException e
-    ) {
+
+    @ExceptionHandler({EmployeeAlreadyAddedException.class,
+            EmployeeNotFoundException.class,
+            EmployeeStorageIsFullException.class})
+    public ResponseEntity<String> handleException(RuntimeException e){
+        HttpStatus status;
+        switch(e.getClass().getName()){
+            case "EmployeeAlreadyAddedException":
+                status = HttpStatus.NOT_ACCEPTABLE;
+                break;
+            case "EmployeeNotFoundException":
+                status = HttpStatus.NOT_FOUND;
+                break;
+            case "EmployeeStorageIsFullException":
+                status = HttpStatus.INSUFFICIENT_STORAGE;
+                break;
+            default:
+                status = HttpStatus.BAD_GATEWAY;
+        }
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(status)
                 .body(e.getMessage());
     }
-
-    @ExceptionHandler(EmployeeStorageIsFullException.class)
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public ResponseEntity<String> handleNoSuchElementFoundException(
-            EmployeeStorageIsFullException e
-    ) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_ACCEPTABLE)
-                .body(e.getMessage());
-    }
-
 }

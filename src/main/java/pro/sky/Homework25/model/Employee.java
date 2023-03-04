@@ -28,6 +28,7 @@ public class Employee {
     }
 
 
+
     @Override
     public int hashCode() {
         return Objects.hash(firstName, lastName);
@@ -36,7 +37,7 @@ public class Employee {
     @Override
     public boolean equals(Object obj) {
        if(this.getClass() != obj.getClass())
-           throw new RuntimeException("Wrong types");
+           return false;
 
        return this.firstName.equals(((Employee) obj).firstName) &&
                this.lastName.equals(((Employee) obj).lastName);

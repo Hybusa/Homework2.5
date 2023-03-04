@@ -11,12 +11,13 @@ import java.util.Set;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+    private final int BOOK_MAX_SIZE = 2;
     private final Set<Employee> employeeSet = new HashSet<>(10);
 
     @Override
     public Employee addEmployee(String firstName, String lastName) {
 
-        if (employeeSet.size() > 9)
+        if (employeeSet.size() > BOOK_MAX_SIZE)
             throw new EmployeeStorageIsFullException("Employee Book is full.");
 
         final Employee tmpEmployee = new Employee(firstName, lastName);
@@ -56,4 +57,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         throw new EmployeeNotFoundException("There is no such employee");
     }
 
+    @Override
+    public Set<Employee> getAllEmployees() {
+        return employeeSet;
+    }
 }
