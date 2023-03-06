@@ -9,8 +9,7 @@ import pro.sky.Homework25.exception.EmployeeStorageIsFullException;
 import pro.sky.Homework25.model.Employee;
 import pro.sky.Homework25.service.EmployeeServiceImpl;
 
-import java.util.Set;
-
+import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "/employee")
@@ -47,7 +46,7 @@ public class EmployeeController {
 
     @GetMapping(path = "getAll")
     @ResponseStatus(HttpStatus.OK)
-    public Set<Employee> getAllEmployees(){
+    public Collection<Employee> getAllEmployees(){
        return employeeService.getAllEmployees();
     }
 

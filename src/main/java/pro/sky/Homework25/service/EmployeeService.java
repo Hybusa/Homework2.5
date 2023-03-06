@@ -1,9 +1,8 @@
 package pro.sky.Homework25.service;
 
-
 import pro.sky.Homework25.model.Employee;
+import java.util.Collection;
 
-import java.util.Set;
 
 interface EmployeeService {
 
@@ -13,6 +12,6 @@ interface EmployeeService {
 
     Employee findEmployee(String firstName, String lastName);
 
-    Set<Employee> getAllEmployees();
+    Collection<Employee> getAllEmployees();
 
 }
