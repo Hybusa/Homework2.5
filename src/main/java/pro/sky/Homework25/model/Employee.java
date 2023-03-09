@@ -1,18 +1,28 @@
 package pro.sky.Homework25.model;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class Employee {
 
     private final String firstName;
 
     private final String lastName;
+
+    private Department department;
+    private double salary;
+
+
     private final int employeeHash;
 
     public Employee(String firstName, String lastName) {
+        Random rn = new Random();
         this.firstName = firstName;
         this.lastName = lastName;
-        this.employeeHash = Objects.hash( firstName, lastName);
+        this.employeeHash = Objects.hash(firstName, lastName);
+        this.department = Department.valueOf(rn.nextInt(7)).get();
+        this.salary = rn.nextInt(500000 - 100000)+100000;
+
     }
 
     public String getFirstName() {
@@ -22,6 +32,15 @@ public class Employee {
     public String getLastName() {
         return lastName;
     }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
 
     @Override
     public String toString() {
