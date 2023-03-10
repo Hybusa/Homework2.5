@@ -12,14 +12,10 @@ public class Employee {
     private Department department;
     private double salary;
 
-
-    private final int employeeHash;
-
     public Employee(String firstName, String lastName) {
         Random rn = new Random();
         this.firstName = firstName;
         this.lastName = lastName;
-        this.employeeHash = Objects.hash(firstName, lastName);
         this.department = Department.valueOf(rn.nextInt(7)).get();
         this.salary = rn.nextInt(500000 - 100000)+100000;
 
@@ -41,7 +37,6 @@ public class Employee {
         return salary;
     }
 
-
     @Override
     public String toString() {
         return String.format("Name: %s %s",
@@ -51,7 +46,7 @@ public class Employee {
 
     @Override
     public int hashCode() {
-        return employeeHash;
+        return Objects.hash(firstName, lastName);
     }
 
     @Override

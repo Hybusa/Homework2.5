@@ -6,24 +6,21 @@ import org.springframework.web.bind.annotation.*;
 import pro.sky.Homework25.exception.EmployeeAlreadyAddedException;
 import pro.sky.Homework25.exception.EmployeeNotFoundException;
 import pro.sky.Homework25.exception.EmployeeStorageIsFullException;
-import pro.sky.Homework25.exception.NoSuchDepartmentException;
-import pro.sky.Homework25.model.Department;
 import pro.sky.Homework25.model.Employee;
-import pro.sky.Homework25.service.EmployeeServiceImpl;
+import pro.sky.Homework25.service.EmployeeService;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
+@RequestMapping("employee")
 public class EmployeeController {
-    private final EmployeeServiceImpl employeeService;
+    private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeServiceImpl employeeService) {
+    public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
-    @GetMapping(path = "/employee/add")
+    @GetMapping(path = "add")
     @ResponseStatus(HttpStatus.OK)
     public Employee addEmployee(@RequestParam("firstName") String firstName,
                                 @RequestParam("lastName") String lastName
@@ -31,7 +28,7 @@ public class EmployeeController {
         return employeeService.addEmployee(firstName, lastName);
     }
 
-    @GetMapping(path = "/employee/remove")
+    @GetMapping(path = "remove")
     @ResponseStatus(HttpStatus.OK)
     public Employee removeEmployee(@RequestParam("firstName") String firstName,
                                    @RequestParam("lastName") String lastName
@@ -39,7 +36,7 @@ public class EmployeeController {
         return employeeService.removeEmployee(firstName, lastName);
     }
 
-    @GetMapping(path = "/employee/find")
+    @GetMapping(path = "find")
     @ResponseStatus(HttpStatus.OK)
     public Employee findEmployee(@RequestParam("firstName") String firstName,
                                  @RequestParam("lastName") String lastName
@@ -47,47 +44,19 @@ public class EmployeeController {
         return employeeService.findEmployee(firstName, lastName);
     }
 
-    @GetMapping(path = "/employee/getAll")
+    @GetMapping(path = "getAll")
     @ResponseStatus(HttpStatus.OK)
     public Collection<Employee> getAllEmployees(){
        return employeeService.getAllEmployees();
     }
 
-    @GetMapping(path = "/departments/max-salary")
-    @ResponseStatus(HttpStatus.OK)
-    public Employee getMaxSalary(@RequestParam ("departmentId") int departmentId){
-        Optional<Employee> tmpEmployee = employeeService
-                .getMaxSalaryFromDepartment(Department.valueOf(departmentId));
-        if(tmpEmployee.isEmpty())
-            throw new NoSuchDepartmentException("There is no employee in that department");
-        return tmpEmployee.get();
-    }
 
-    @GetMapping(path = "/departments/min-salary")
-    @ResponseStatus(HttpStatus.OK)
-    public Employee getMinSalary(@RequestParam ("departmentId") int departmentId){
-        Optional<Employee> tmpEmployee = employeeService
-                .getMinSalaryFromDepartment(Department.valueOf(departmentId));
-        if(tmpEmployee.isEmpty())
-            throw new NoSuchDepartmentException("There is no employee in that department");
-        return tmpEmployee.get();
-    }
-
-    @GetMapping("/departments/all")
-    @ResponseStatus(HttpStatus.OK)
-    public Collection<Collection<Employee>> getAllFromDepartment(@RequestParam ("departmentId") Optional<Integer> departmentId){
-        if(departmentId.isPresent())
-            return List.of((employeeService.getAllEmployeesFromDepartment(Department.valueOf(departmentId.get()))));
-
-        return employeeService.getAllSortedByDepartments();
-    }
 
 
     @ExceptionHandler({
             EmployeeAlreadyAddedException.class,
             EmployeeNotFoundException.class,
             EmployeeStorageIsFullException.class,
-            NoSuchDepartmentException.class
     })
     public ResponseEntity<String> handleException(RuntimeException e){
         HttpStatus status;
@@ -96,7 +65,6 @@ public class EmployeeController {
                 status = HttpStatus.NOT_ACCEPTABLE;
                 break;
             case "EmployeeNotFoundException":
-            case "NoSuchDepartmentException":
                 status = HttpStatus.NO_CONTENT;
                 break;
             case "EmployeeStorageIsFullException":
@@ -105,6 +73,7 @@ public class EmployeeController {
             default:
                 status = HttpStatus.BAD_GATEWAY;
         }
+
         return ResponseEntity
                 .status(status)
                 .body(e.getMessage());
